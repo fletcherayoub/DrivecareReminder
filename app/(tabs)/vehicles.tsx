@@ -7,6 +7,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Animated, { FadeInRight } from 'react-native-reanimated';
 
 import { useRouter } from 'expo-router';
+import { BottomBannerAd } from '@/components/adsComponents/BottomBannerAd';
+import { useActionAd } from '@/hooks/useActionAd';
 
 export default function VehiclesScreen() {
   const theme = useTheme();
@@ -14,6 +16,7 @@ export default function VehiclesScreen() {
   const vehicles = useVehicleStore((state) => state.vehicles);
   const setDefaultVehicle = useVehicleStore((state) => state.setDefaultVehicle);
   const deleteVehicle = useVehicleStore((state) => state.deleteVehicle);
+  const { runWithAd, isLoading } = useActionAd();
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]} edges={['top']}>
@@ -106,8 +109,10 @@ export default function VehiclesScreen() {
       <FAB
         icon={({ color, size }) => <Plus color={color} size={size} />}
         style={[styles.fab, { backgroundColor: theme.colors.primaryContainer }]}
-        onPress={() => router.push('/add-vehicle')}
+        onPress={() => runWithAd(() => router.push('/add-vehicle'))}
+        loading={isLoading}
       />
+      <BottomBannerAd />
     </SafeAreaView>
   );
 }
@@ -123,7 +128,7 @@ const styles = StyleSheet.create({
   },
   listContent: {
     padding: 16,
-    paddingBottom: 80,
+    paddingBottom: 130, // Extra padding for FAB + Banner
   },
   emptyContainer: {
     flex: 1,
@@ -176,6 +181,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     margin: 16,
     right: 0,
-    bottom: 0,
+    bottom: 60, // Above banner ad
   },
 });

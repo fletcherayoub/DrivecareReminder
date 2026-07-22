@@ -11,6 +11,8 @@ import Animated, { FadeInRight } from 'react-native-reanimated';
 import { Pressable } from 'react-native';
 
 import { useRouter } from 'expo-router';
+import { BottomBannerAd } from '@/components/adsComponents/BottomBannerAd';
+import { useActionAd } from '@/hooks/useActionAd';
 
 export default function ExpensesScreen() {
   const theme = useTheme();
@@ -18,6 +20,7 @@ export default function ExpensesScreen() {
 
   const expenses = useExpenseStore((state) => state.expenses);
   const deleteExpense = useExpenseStore((state) => state.deleteExpense);
+  const { runWithAd, isLoading } = useActionAd();
   const vehicles = useVehicleStore((state) => state.vehicles);
   const activeVehicle = vehicles.find((v) => v.isDefault) || vehicles[0];
 
@@ -137,8 +140,10 @@ export default function ExpensesScreen() {
       <FAB
         icon={({ color, size }) => <Plus color={color} size={size} />}
         style={[styles.fab, { backgroundColor: theme.colors.primaryContainer }]}
-        onPress={() => router.push('/add-expense')}
+        onPress={() => runWithAd(() => router.push('/add-expense'))}
+        loading={isLoading}
       />
+      <BottomBannerAd />
     </SafeAreaView>
   );
 }
@@ -149,7 +154,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     padding: 16,
-    paddingBottom: 80,
+    paddingBottom: 130, // Extra padding for FAB + Banner
   },
   header: {
     marginBottom: 24,
@@ -170,6 +175,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     margin: 16,
     right: 0,
-    bottom: 0,
+    bottom: 60, // Above banner ad
   },
 });

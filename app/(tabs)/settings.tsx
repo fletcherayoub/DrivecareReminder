@@ -5,6 +5,7 @@ import { useSettingsStore, ThemeType, UnitType } from '@/store/settingsStore';
 import { Moon, Sun, Monitor, Globe, Bell, FileDown, UploadCloud, Banknote, Ruler } from 'lucide-react-native';
 import { PremiumCard } from '@/components/PremiumCard';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import { BottomBannerAd } from '@/components/adsComponents/BottomBannerAd';
 
 export default function SettingsScreen() {
   const theme = useTheme();
@@ -119,6 +120,7 @@ export default function SettingsScreen() {
         </Animated.View>
         
       </ScrollView>
+      <BottomBannerAd />
     </SafeAreaView>
   );
 }

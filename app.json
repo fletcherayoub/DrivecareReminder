@@ -37,7 +37,14 @@
       ],
       "expo-localization",
       "expo-sharing",
-      "@react-native-community/datetimepicker"
+      "@react-native-community/datetimepicker",
+      [
+        "react-native-google-mobile-ads",
+        {
+          "androidAppId": "ca-app-pub-3598932750971152~8682952136",
+          "iosAppId": "ca-app-pub-3940256099942544~1458002511"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
@@ -47,6 +54,12 @@
       "eas": {
         "projectId": "e388a85d-22e2-4cd0-9350-9e3505bf474a"
       }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/e388a85d-22e2-4cd0-9350-9e3505bf474a"
     }
   }
 }

@@ -11,6 +11,8 @@ import { Car, Activity, Wrench, Droplet, CalendarClock, Plus, Gauge, Edit2, Tras
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Pressable } from 'react-native';
 import { triggerImmediateNotification } from '@/utils/notifications';
+import { BottomBannerAd } from '@/components/adsComponents/BottomBannerAd';
+import { useActionAd } from '@/hooks/useActionAd';
 
 export default function DashboardScreen() {
   const theme = useTheme();
@@ -20,6 +22,7 @@ export default function DashboardScreen() {
   const activeVehicle = vehicles.find((v) => v.isDefault) || vehicles[0];
   const reminders = useReminderStore((state) => state.reminders);
   const deleteReminder = useReminderStore((state) => state.deleteReminder);
+  const { runWithAd, isLoading } = useActionAd();
 
   const [odometerInput, setOdometerInput] = useState('');
   
@@ -68,13 +71,15 @@ export default function DashboardScreen() {
     <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]} edges={['top']}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         
-        <View style={styles.header}>
-          <Text variant="headlineMedium" style={{ color: theme.colors.primary, fontWeight: 'bold' }}>
-            {activeVehicle ? activeVehicle.nickname || activeVehicle.model : 'Dashboard'}
-          </Text>
-          <Text variant="bodyMedium" style={{ color: theme.colors.onSurfaceVariant }}>
-            {activeVehicle ? `${activeVehicle.year} ${activeVehicle.brand} • ${activeVehicle.currentMileage.toLocaleString()} km` : 'No vehicles added yet'}
-          </Text>
+        <View style={[styles.header, { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }]}>
+          <View>
+            <Text variant="headlineMedium" style={{ color: theme.colors.primary, fontWeight: 'bold' }}>
+              {activeVehicle ? activeVehicle.nickname || activeVehicle.model : 'Dashboard'}
+            </Text>
+            <Text variant="bodyMedium" style={{ color: theme.colors.onSurfaceVariant }}>
+              {activeVehicle ? `${activeVehicle.year} ${activeVehicle.brand} • ${activeVehicle.currentMileage.toLocaleString()} km` : 'No vehicles added yet'}
+            </Text>
+          </View>
         </View>
 
         {activeVehicle && (
@@ -123,7 +128,7 @@ export default function DashboardScreen() {
 
         <PremiumCard title="Quick Actions" delay={300}>
           <View style={styles.quickActions}>
-            <ActionIcon icon={Wrench} label="Service" color={theme.colors.primary} onPress={() => router.push('/add-maintenance')} />
+            <ActionIcon icon={Wrench} label="Service" color={theme.colors.primary} onPress={() => runWithAd(() => router.push('/add-maintenance'))} />
             <ActionIcon icon={Droplet} label="Fuel" color={theme.colors.error} onPress={() => router.push('/add-fuel')} />
             <ActionIcon icon={CalendarClock} label="Reminder" color={(theme.colors as any).warning} onPress={() => router.push('/reminders')} />
           </View>
@@ -167,13 +172,15 @@ export default function DashboardScreen() {
             mode="text" 
             icon={({ size, color }) => <Plus size={size} color={color} />} 
             style={{ marginTop: 8 }}
-            onPress={() => router.push('/add-maintenance')}
+            onPress={() => runWithAd(() => router.push('/add-maintenance'))}
+            loading={isLoading}
           >
             Log Service
           </Button>
         </PremiumCard>
 
       </ScrollView>
+      <BottomBannerAd />
     </SafeAreaView>
   );
 }
